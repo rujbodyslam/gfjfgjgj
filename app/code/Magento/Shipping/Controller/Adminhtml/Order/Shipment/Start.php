@@ -1,0 +1,28 @@
+<?php
+/**
+ *
+ * Copyright © 2013-2017 Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+namespace Magento\Shipping\Controller\Adminhtml\Order\Shipment;
+
+class Start extends \Magento\Backend\App\Action
+{
+    /**
+     * {@inheritdoc}
+     */
+    const ADMIN_RESOURCE = 'Magento_Sales::shipment';
+
+    /**
+     * Start create shipment action
+     *
+     * @return void
+     */
+    public function execute()
+    {
+        /**
+         * Clear old values for shipment qty's
+         */
+        $this->_redirect('*/*/new', ['order_id' => $this->getRequest()->getParam('order_id')]);
+    }
+}
