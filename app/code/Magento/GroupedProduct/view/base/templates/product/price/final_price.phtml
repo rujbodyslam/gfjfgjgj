@@ -1,0 +1,43 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+/**
+ * Template for displaying grouped product price
+ */
+?>
+<?php
+$minProduct = $block->getSaleableItem()
+    ->getPriceInfo()
+    ->getPrice(\Magento\Catalog\Pricing\Price\FinalPrice::PRICE_CODE)
+    ->getMinProduct();
+
+if ($minProduct) {
+    $finalPrice = $minProduct->getPriceInfo()->getPrice('final_price');
+    $finalPriceValue = $finalPrice->getAmount();
+    $amountRender = $block->getRendererPool()
+        ->createAmountRender(
+            $finalPriceValue,
+            $minProduct,
+            $finalPrice,
+            ['include_container' => true]
+        );
+    $currencyCode = $amountRender->getDisplayCurrencyCode();
+} else {
+    $finalPriceValue = 0;
+    $currencyCode = '';
+}
+?>
+<div class="price-box" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+    <?php if ($minProduct && \Magento\Framework\Pricing\Render::ZONE_ITEM_VIEW != $block->getZone()): ?>
+    <p class="minimal-price">
+        <span class="price-label"><?php /* @escapeNotVerified */ echo __('Starting at')?></span><?php echo $amountRender->toHtml();?>
+    </p>
+    <?php endif ?>
+    <meta itemprop="price" content="<?php /* @noEscape */ echo $finalPriceValue; ?>" />
+    <meta itemprop="priceCurrency" content="<?php /* @noEscape */ echo $currencyCode; ?>" />
+</div>
